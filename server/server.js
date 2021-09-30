@@ -6,6 +6,9 @@ import Shopify, { ApiVersion } from "@shopify/shopify-api";
 import Koa from "koa";
 import next from "next";
 import Router from "koa-router";
+import settingsRoute from "./routes/settingsRouter";
+import mongo from "koa-mongo";
+const bodyParser = require("koa-bodyparser");
 
 dotenv.config();
 const port = parseInt(process.env.PORT, 10) || 3000;
@@ -14,6 +17,8 @@ const app = next({
   dev,
 });
 const handle = app.getRequestHandler();
+
+const { MONGO_URL } = process.env;
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -35,10 +40,27 @@ app.prepare().then(async () => {
   const router = new Router();
   server.keys = [Shopify.Context.API_SECRET_KEY];
   server.use(
+    mongo({
+      uri: MONGO_URL,
+      max: 100,
+      min: 1,
+    })
+  );
+  server.use(
     createShopifyAuth({
       async afterAuth(ctx) {
         // Access token and shop available in ctx.state.shopify
         const { shop, accessToken, scope } = ctx.state.shopify;
+
+        // insert shop info to db
+        ctx.db
+          .collection("shop")
+          .updateOne(
+            { shop },
+            { $set: { shop, accessToken, scope } },
+            { upsert: true }
+          );
+
         const host = ctx.query.host;
         ACTIVE_SHOPIFY_SHOPS[shop] = scope;
 
@@ -99,6 +121,9 @@ app.prepare().then(async () => {
     }
   });
 
+  server.use(bodyParser());
+  server.use(settingsRoute.allowedMethods());
+  server.use(settingsRoute.routes());
   server.use(router.allowedMethods());
   server.use(router.routes());
   server.listen(port, () => {
