@@ -7,7 +7,10 @@ import Koa from "koa";
 import next from "next";
 import Router from "koa-router";
 import settingsRoute from "./routes/settingsRouter";
+import webhooksRouter from "./routes/webhooksRouter";
+import ordersRouter from "./routes/ordersRouter";
 import mongo from "koa-mongo";
+import ApiNode from "shopify-api-node";
 const bodyParser = require("koa-bodyparser");
 
 dotenv.config();
@@ -18,13 +21,13 @@ const app = next({
 });
 const handle = app.getRequestHandler();
 
-const { MONGO_URL } = process.env;
+const { MONGO_URL, HOST } = process.env;
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
   SCOPES: process.env.SCOPES.split(","),
-  HOST_NAME: process.env.HOST.replace(/https:\/\//, ""),
+  HOST_NAME: HOST.replace(/https:\/\//, ""),
   API_VERSION: ApiVersion.October20,
   IS_EMBEDDED_APP: true,
   // This should be replaced with your preferred storage strategy
@@ -79,6 +82,27 @@ app.prepare().then(async () => {
           );
         }
 
+        try {
+          const client = new ApiNode({
+            shopName: shop,
+            accessToken,
+          });
+          // create webhook
+          const topic = "orders/create";
+          const address = `${HOST}/webhook/orders/create`;
+          const re = await client.webhook.list();
+          if (
+            !re.find((item) => item.topic === topic && item.address === address)
+          ) {
+            await client.webhook.create({
+              topic,
+              address,
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+
         // Redirect to app with shop parameter upon auth
         ctx.redirect(`/?shop=${shop}&host=${host}`);
       },
@@ -124,6 +148,10 @@ app.prepare().then(async () => {
   server.use(bodyParser());
   server.use(settingsRoute.allowedMethods());
   server.use(settingsRoute.routes());
+  server.use(webhooksRouter.allowedMethods());
+  server.use(webhooksRouter.routes());
+  server.use(ordersRouter.allowedMethods());
+  server.use(ordersRouter.routes());
   server.use(router.allowedMethods());
   server.use(router.routes());
   server.listen(port, () => {
