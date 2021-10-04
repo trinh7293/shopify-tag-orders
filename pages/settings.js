@@ -13,7 +13,6 @@ export default function SettingForm() {
   const { sendAuthApi } = useAppContext();
   const [price, setPrice] = useState(0);
   const [tag, setTag] = useState("");
-  const [submitable, setSubmitable] = useState(true);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { shop } = router.query;
@@ -58,10 +57,6 @@ export default function SettingForm() {
     [price, tag]
   );
 
-  useEffect(() => {
-    setSubmitable(price && tag);
-  }, [price, tag]);
-
   const handlePriceChange = useCallback((value) => setPrice(value), []);
   const handleTagChange = useCallback((value) => setTag(value), []);
 
@@ -85,7 +80,7 @@ export default function SettingForm() {
           helpText={<span>Apply this tag to the order</span>}
         />
 
-        <Button primary disabled={!submitable} loading={loading} submit>
+        <Button primary disabled={!(price && tag)} loading={loading} submit>
           Save
         </Button>
       </FormLayout>
