@@ -1,9 +1,14 @@
 import Router from "koa-router";
+import { receiveWebhook } from "@shopify/koa-shopify-webhooks";
 const router = new Router({ prefix: "/webhook" });
 import ApiNode from "shopify-api-node";
+import dotenv from "dotenv";
+dotenv.config();
+
+const webhook = receiveWebhook({ secret: process.env.SHOPIFY_API_SECRET });
 
 // handle create order webhook
-router.post("/orders/create", async (ctx) => {
+router.post("/orders/create", webhook, async (ctx) => {
   try {
     // get shop name from request
     const shopName = ctx.request.headers["x-shopify-shop-domain"];
