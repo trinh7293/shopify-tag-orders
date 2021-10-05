@@ -2,19 +2,19 @@ import {
   Button,
   Card,
   DataTable,
-  Frame,
-  Heading,
   Page,
   Pagination,
   Stack,
   TextField,
 } from "@shopify/polaris";
+import useTranslation from "next-translate/useTranslation";
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAppContext } from "../appContext/state";
 import QueryString from "qs";
 
 const Index = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const { sendAuthApi } = useAppContext();
   const [orders, setOrders] = useState([]);
@@ -106,7 +106,7 @@ const Index = () => {
       <Stack vertical spacing="extraLoose">
         <Stack spacing="extraLoose">
           <TextField
-            placeholder="Tag"
+            placeholder={t("common:tag")}
             value={tagInput}
             onChange={handleTagChange}
             autoComplete="off"
@@ -117,13 +117,17 @@ const Index = () => {
             loading={loading}
             onClick={updateTag}
           >
-            Search
+            {t("common:search")}
           </Button>
         </Stack>
         <Card spacing="extraLoose">
           <DataTable
             columnContentTypes={["numeric", "numeric", "text"]}
-            headings={["Order number", "Total", "Order Date"]}
+            headings={[
+              t("common:order_number"),
+              t("common:total"),
+              t("common:order_date"),
+            ]}
             rows={transformOrder2Table()}
           />
         </Card>

@@ -9,10 +9,12 @@ import {
   Stack,
   TextField,
 } from "@shopify/polaris";
+import useTranslation from "next-translate/useTranslation";
 import { useAppContext } from "../appContext/state";
 import { useRouter } from "next/router";
 
 export default function SettingForm() {
+  const { t } = useTranslation();
   const { sendAuthApi, toastNoti } = useAppContext();
   const [price, setPrice] = useState(0);
   const [tag, setTag] = useState("");
@@ -54,7 +56,7 @@ export default function SettingForm() {
         });
         setLoading(false);
         toastNoti({
-          message: "Settings saved",
+          message: t("setting-saved"),
           duration: 3000,
         });
       } catch (error) {
@@ -73,33 +75,33 @@ export default function SettingForm() {
         <Stack vertical spacing="extraTight">
           <Layout>
             <Layout.Section>
-              <p>When the total price of the order is greater than</p>
+              <p>{t("common:price-condition-description")}</p>
             </Layout.Section>
             <Layout.Section secondary>
               <TextField
                 value={price}
                 onChange={handlePriceChange}
-                placeholder="When the total price of the order is greater than"
+                placeholder={t("common:price-condition-description")}
                 type="number"
               />
             </Layout.Section>
           </Layout>
           <Layout>
             <Layout.Section>
-              <p>Apply this tag to the order</p>
+              <p>{t("common:apply-tag-to-order")}</p>
             </Layout.Section>
             <Layout.Section secondary>
               <TextField
                 value={tag}
                 onChange={handleTagChange}
-                placeholder="Apply this tag to the order"
+                placeholder={t("common:apply-tag-to-order")}
                 type="text"
               />
             </Layout.Section>
           </Layout>
           <Stack distribution="trailing">
             <Button primary disabled={!(price && tag)} loading={loading} submit>
-              Save
+              {t("common:save")}
             </Button>
           </Stack>
         </Stack>
