@@ -4,6 +4,9 @@ import {
   Checkbox,
   Form,
   FormLayout,
+  Layout,
+  Page,
+  Stack,
   TextField,
 } from "@shopify/polaris";
 import { useAppContext } from "../appContext/state";
@@ -65,29 +68,42 @@ export default function SettingForm() {
   const handleTagChange = useCallback((value) => setTag(value), []);
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <FormLayout>
-        <TextField
-          value={price}
-          onChange={handlePriceChange}
-          label="Total Price"
-          type="number"
-          helpText={
-            <span>When the total price of the order is greater than</span>
-          }
-        />
-        <TextField
-          value={tag}
-          onChange={handleTagChange}
-          label="Tag"
-          type="text"
-          helpText={<span>Apply this tag to the order</span>}
-        />
-
-        <Button primary disabled={!(price && tag)} loading={loading} submit>
-          Save
-        </Button>
-      </FormLayout>
-    </Form>
+    <Page>
+      <Form onSubmit={handleSubmit}>
+        <Stack vertical spacing="extraTight">
+          <Layout>
+            <Layout.Section>
+              <p>When the total price of the order is greater than</p>
+            </Layout.Section>
+            <Layout.Section secondary>
+              <TextField
+                value={price}
+                onChange={handlePriceChange}
+                placeholder="When the total price of the order is greater than"
+                type="number"
+              />
+            </Layout.Section>
+          </Layout>
+          <Layout>
+            <Layout.Section>
+              <p>Apply this tag to the order</p>
+            </Layout.Section>
+            <Layout.Section secondary>
+              <TextField
+                value={tag}
+                onChange={handleTagChange}
+                placeholder="Apply this tag to the order"
+                type="text"
+              />
+            </Layout.Section>
+          </Layout>
+          <Stack distribution="trailing">
+            <Button primary disabled={!(price && tag)} loading={loading} submit>
+              Save
+            </Button>
+          </Stack>
+        </Stack>
+      </Form>
+    </Page>
   );
 }

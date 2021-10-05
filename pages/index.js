@@ -2,9 +2,11 @@ import {
   Button,
   Card,
   DataTable,
+  Frame,
   Heading,
   Page,
   Pagination,
+  Stack,
   TextField,
 } from "@shopify/polaris";
 import { useCallback, useEffect, useState } from "react";
@@ -101,37 +103,43 @@ const Index = () => {
 
   return (
     <Page>
-      <TextField
-        label="Tag"
-        value={tagInput}
-        onChange={handleTagChange}
-        autoComplete="off"
-      />
-      <Button
-        primary
-        disabled={tag === tagInput}
-        loading={loading}
-        onClick={updateTag}
-      >
-        Search
-      </Button>
-      <Card>
-        <DataTable
-          columnContentTypes={["numeric", "numeric", "text"]}
-          headings={["Order number", "Total", "Order Date"]}
-          rows={transformOrder2Table()}
-        />
-      </Card>
-      <Pagination
-        hasPrevious={hasPreviousPage}
-        onPrevious={async () => {
-          await fetchOrder(fetchStatus.PREV);
-        }}
-        hasNext={hasNextPage}
-        onNext={async () => {
-          await fetchOrder(fetchStatus.NEXT);
-        }}
-      />
+      <Stack vertical spacing="extraLoose">
+        <Stack spacing="extraLoose">
+          <TextField
+            placeholder="Tag"
+            value={tagInput}
+            onChange={handleTagChange}
+            autoComplete="off"
+          />
+          <Button
+            primary
+            disabled={tag === tagInput}
+            loading={loading}
+            onClick={updateTag}
+          >
+            Search
+          </Button>
+        </Stack>
+        <Card spacing="extraLoose">
+          <DataTable
+            columnContentTypes={["numeric", "numeric", "text"]}
+            headings={["Order number", "Total", "Order Date"]}
+            rows={transformOrder2Table()}
+          />
+        </Card>
+        <Stack distribution="center">
+          <Pagination
+            hasPrevious={hasPreviousPage}
+            onPrevious={async () => {
+              await fetchOrder(fetchStatus.PREV);
+            }}
+            hasNext={hasNextPage}
+            onNext={async () => {
+              await fetchOrder(fetchStatus.NEXT);
+            }}
+          />
+        </Stack>
+      </Stack>
     </Page>
   );
 };
