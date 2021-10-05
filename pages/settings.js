@@ -10,7 +10,7 @@ import { useAppContext } from "../appContext/state";
 import { useRouter } from "next/router";
 
 export default function SettingForm() {
-  const { sendAuthApi } = useAppContext();
+  const { sendAuthApi, toastNoti } = useAppContext();
   const [price, setPrice] = useState(0);
   const [tag, setTag] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,7 +38,7 @@ export default function SettingForm() {
     async (_event) => {
       try {
         setLoading(true);
-        const result = await sendAuthApi("settings/add", {
+        const result = await sendAuthApi("settings/save-settings", {
           method: "POST",
           body: JSON.stringify({
             shop,
@@ -50,6 +50,10 @@ export default function SettingForm() {
           },
         });
         setLoading(false);
+        toastNoti({
+          message: "Settings saved",
+          duration: 3000,
+        });
       } catch (error) {
         console.log(error);
       }
