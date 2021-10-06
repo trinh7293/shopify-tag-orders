@@ -47,6 +47,7 @@ app.prepare().then(async () => {
       uri: MONGO_URL,
       max: 100,
       min: 1,
+      acquireTimeoutMillis: 2000,
     })
   );
   server.use(
