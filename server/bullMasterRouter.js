@@ -10,6 +10,7 @@ const {
   QUEUE_MONITOR_PASSWORD,
   QUEUE_MONITOR_PATH,
 } = process.env;
+
 const router = new Router();
 router.all(
   `${QUEUE_MONITOR_PATH}(.*)`,

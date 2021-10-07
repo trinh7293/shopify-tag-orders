@@ -22,7 +22,7 @@ const app = next({
 });
 const handle = app.getRequestHandler();
 
-const { MONGO_URL, HOST } = process.env;
+const { MONGODB_URL, HOST } = process.env;
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -45,7 +45,7 @@ app.prepare().then(async () => {
   server.keys = [Shopify.Context.API_SECRET_KEY];
   server.use(
     mongo({
-      uri: MONGO_URL,
+      uri: MONGODB_URL,
       max: 100,
       min: 1,
       acquireTimeoutMillis: 2000,
