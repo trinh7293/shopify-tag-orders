@@ -6,6 +6,6 @@
   "search": "Search",
   "save": "Save",
   "setting-saved": "Settings saved",
-  "price-condition-description": "When the total price of the order is greater than",
-  "apply-tag-to-order": "Apply this tag to the order"
+  "when-the-total-price-of-the-order-is-greater-than": "When the total price of the order is greater than",
+  "apply-this-tag-to-the-order": "Apply this tag to the order"
 }

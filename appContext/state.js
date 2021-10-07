@@ -15,7 +15,10 @@ export function AppWrapper({ children }) {
   let sharedState = {
     sendAuthApi: authenticatedFetch(app),
     toastNoti: (options = defaultToastOptions) => {
-      const toastNotice = Toast.create(app, options);
+      const toastNotice = Toast.create(app, {
+        ...defaultToastOptions,
+        ...options,
+      });
       toastNotice.dispatch(Toast.Action.SHOW);
     },
   };
