@@ -48,7 +48,7 @@ app.prepare().then(async () => {
       uri: MONGODB_URL,
       max: 100,
       min: 1,
-      acquireTimeoutMillis: 2000,
+      acquireTimeoutMillis: 20000,
     })
   );
 
