@@ -9,8 +9,7 @@ const processor = async (job) => {
 
     // get settings data in mongo db
     // await mongoInstance.connect();
-    const context = {};
-    await connectToMongoDb(context);
+    const context = await connectToMongoDb(context);
     const shopData = await context.db
       .collection("shop")
       .findOne({ shop: shopName });

@@ -51,6 +51,7 @@ app.prepare().then(async () => {
       acquireTimeoutMillis: 2000,
     })
   );
+
   server.use(
     createShopifyAuth({
       async afterAuth(ctx) {
