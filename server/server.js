@@ -9,6 +9,7 @@ import Router from "koa-router";
 import settingsRoute from "./routes/settingsRouter";
 import webhooksRouter from "./routes/webhooksRouter";
 import ordersRouter from "./routes/ordersRouter";
+import bullMasterRouter from "./bullMasterRouter";
 import mongo from "koa-mongo";
 import ApiNode from "shopify-api-node";
 const bodyParser = require("koa-bodyparser");
@@ -21,7 +22,7 @@ const app = next({
 });
 const handle = app.getRequestHandler();
 
-const { MONGO_URL, HOST } = process.env;
+const { MONGODB_URL, HOST } = process.env;
 
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
@@ -44,12 +45,13 @@ app.prepare().then(async () => {
   server.keys = [Shopify.Context.API_SECRET_KEY];
   server.use(
     mongo({
-      uri: MONGO_URL,
+      uri: MONGODB_URL,
       max: 100,
       min: 1,
-      acquireTimeoutMillis: 2000,
+      acquireTimeoutMillis: 20000,
     })
   );
+
   server.use(
     createShopifyAuth({
       async afterAuth(ctx) {
@@ -137,7 +139,6 @@ app.prepare().then(async () => {
   router.get("/_next/webpack-hmr", handleRequest); // Webpack content is clear
   router.get("(.*)", async (ctx) => {
     const shop = ctx.query.shop;
-
     // This shop hasn't been seen yet, go through OAuth to create a session
     if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
       ctx.redirect(`/auth?shop=${shop}`);
@@ -153,6 +154,8 @@ app.prepare().then(async () => {
   server.use(webhooksRouter.routes());
   server.use(ordersRouter.allowedMethods());
   server.use(ordersRouter.routes());
+  server.use(bullMasterRouter.allowedMethods());
+  server.use(bullMasterRouter.routes());
   server.use(router.allowedMethods());
   server.use(router.routes());
   server.listen(port, () => {
