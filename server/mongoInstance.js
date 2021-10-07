@@ -2,7 +2,9 @@ import mongo from "koa-mongo";
 require("dotenv").config();
 
 const { MONGODB_URL, MONGODB_POOL_MAX, MONGODB_POOL_MIN } = process.env;
-export const connectToMongoDb = async (ctx) => {
+
+const ctx = {};
+export const connectToMongoDb = async () => {
   await mongo({
     uri: MONGODB_URL,
     max: MONGODB_POOL_MAX,
