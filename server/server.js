@@ -9,6 +9,7 @@ import Router from "koa-router";
 import settingsRoute from "./routes/settingsRouter";
 import webhooksRouter from "./routes/webhooksRouter";
 import ordersRouter from "./routes/ordersRouter";
+import bullMasterRouter from "./bullMasterRouter";
 import mongo from "koa-mongo";
 import ApiNode from "shopify-api-node";
 const bodyParser = require("koa-bodyparser");
@@ -137,7 +138,6 @@ app.prepare().then(async () => {
   router.get("/_next/webpack-hmr", handleRequest); // Webpack content is clear
   router.get("(.*)", async (ctx) => {
     const shop = ctx.query.shop;
-
     // This shop hasn't been seen yet, go through OAuth to create a session
     if (ACTIVE_SHOPIFY_SHOPS[shop] === undefined) {
       ctx.redirect(`/auth?shop=${shop}`);
@@ -153,6 +153,8 @@ app.prepare().then(async () => {
   server.use(webhooksRouter.routes());
   server.use(ordersRouter.allowedMethods());
   server.use(ordersRouter.routes());
+  server.use(bullMasterRouter.allowedMethods());
+  server.use(bullMasterRouter.routes());
   server.use(router.allowedMethods());
   server.use(router.routes());
   server.listen(port, () => {
