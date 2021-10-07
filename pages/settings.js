@@ -56,8 +56,7 @@ export default function SettingForm() {
         });
         setLoading(false);
         toastNoti({
-          message: t("setting-saved"),
-          duration: 3000,
+          message: t("common:setting-saved"),
         });
       } catch (error) {
         console.log(error);
@@ -75,26 +74,30 @@ export default function SettingForm() {
         <Stack vertical spacing="extraTight">
           <Layout>
             <Layout.Section>
-              <p>{t("common:price-condition-description")}</p>
+              <p>
+                {t("common:when-the-total-price-of-the-order-is-greater-than")}
+              </p>
             </Layout.Section>
             <Layout.Section secondary>
               <TextField
                 value={price}
                 onChange={handlePriceChange}
-                placeholder={t("common:price-condition-description")}
+                placeholder={t(
+                  "common:when-the-total-price-of-the-order-is-greater-than"
+                )}
                 type="number"
               />
             </Layout.Section>
           </Layout>
           <Layout>
             <Layout.Section>
-              <p>{t("common:apply-tag-to-order")}</p>
+              <p>{t("common:apply-this-tag-to-the-order")}</p>
             </Layout.Section>
             <Layout.Section secondary>
               <TextField
                 value={tag}
                 onChange={handleTagChange}
-                placeholder={t("common:apply-tag-to-order")}
+                placeholder={t("common:apply-this-tag-to-the-order")}
                 type="text"
               />
             </Layout.Section>
