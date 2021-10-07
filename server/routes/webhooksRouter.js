@@ -6,7 +6,7 @@ dotenv.config();
 const router = new Router({ prefix: "/webhook" });
 
 // init job name to add to queue
-const { CREATE_ORDER_JOB_NAME } = process.env;
+const { ORDER_CREATED_JOB_NAME } = process.env;
 
 // init webhook validation
 const webhook = receiveWebhook({ secret: process.env.SHOPIFY_API_SECRET });
@@ -23,7 +23,7 @@ router.post("/orders/create", webhook, async (ctx) => {
     // add to queue
     ctx.body = "success";
     console.log(`Webhook create order processed, returned status code 200`);
-    await orderCreatedQueue.add(CREATE_ORDER_JOB_NAME, {
+    await orderCreatedQueue.add(ORDER_CREATED_JOB_NAME, {
       shopName,
       orderId,
       current_total_price,
