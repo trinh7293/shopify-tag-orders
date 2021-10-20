@@ -1,0 +1,11 @@
+{
+  "tag": "Tag",
+  "order_number": "Order number",
+  "total": "Total",
+  "order_date": "Order date",
+  "search": "Search",
+  "save": "Save",
+  "setting-saved": "Settings saved",
+  "when-the-total-price-of-the-order-is-greater-than": "When the total price of the order is greater than",
+  "apply-this-tag-to-the-order": "Apply this tag to the order"
+}
